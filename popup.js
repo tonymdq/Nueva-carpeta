@@ -1,26 +1,49 @@
 // popup.js
-
-// Function to update the popup UI with the received values
-console.log("Popup start")
-function updatePopupUI(result, totalCharge, totalRefund) {
-    // Find the elements for the three fields in the popup HTML
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Popup.js loaded.");
+  
     const totalRefundElement = document.getElementById('totalRefund');
     const cancellationFeeElement = document.getElementById('cancellationFee');
     const totalPaidElement = document.getElementById('totalPaid');
+    const extractButton = document.getElementById("extractButton");
 
-    // Update the value of each field with the received values
-    totalRefundElement.value = result;
-    cancellationFeeElement.value = totalCharge;
-    totalPaidElement.value = totalRefund;
-}
-
-// Listen for messages from the background script
-
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    console.log('received message Popup.js', message);
-    if (message.result && message.totalCharge && message.totalRefund) {
-        // Call the updatePopupUI function with the received values
-        updatePopupUI(message.result, message.totalCharge, message.totalRefund);
+    if (!extractButton) {
+      console.error("Error: Expected DOM elements not found.");
+      return;
     }
-});
-console.log("Popup.js end")
+    
+    if (extractButton) {
+        extractButton.addEventListener("click", async function () {
+        console.log("Button clicked");
+  
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          const tab = tabs[0];
+  
+          if (!tab) {
+            // If the content script is not injected into the current tab
+            // the error will be logged in the result field.
+            console.error("Content script is not injected into the current tab.");
+            resultField.value = "Error: Content script not injected.";
+            return;
+          }
+  
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { action: "extractData" },
+            function (response) {
+              console.log("Received response from content", response);
+              const result = response.result; // Nested response, as variable received is named "response"
+              const totalCharge = response.totalCharge;
+              const totalRefund = response.totalRefund;
+              console.log("Received:", result, totalCharge, totalRefund);
+              totalRefundElement.value = totalRefund;
+              cancellationFeeElement.value = totalCharge;
+              totalPaidElement.value = result;
+            }
+          );
+        });
+      });
+    } else {
+      console.error("Element with ID 'calculate' not found.");
+    }
+  });

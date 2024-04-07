@@ -4,9 +4,6 @@
   "version": "1.0",
   "description": "This extension calculates the amount of refund for partial refunds. Only works for 3 day loss or 1 day loss in case the booking lenth is 2 or 3 days",
   "permissions": ["activeTab", "storage", "runtime", "nativeMessaging"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"], 
