@@ -1,9 +1,0 @@
-{
-  "name": "extension-chrome-rentalcars",
-  "version": "0.0.0",
-  "description": "ExtensionChromeRentalcars",
-  "main": "app.js",
-  "author": {
-    "name": ""
-  }
-}
