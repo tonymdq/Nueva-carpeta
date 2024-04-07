@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       cancellationFee = 1
     }; 
     sendResponse({ 
-      result : MathMLElement.round(carPriceFinal + insurance),
+      result : Math.round(carPriceFinal + insurance),
       totalCharge : Math.round(carPriceFinal / days * cancellationFee),
       totalRefund : Math.round(carPriceFinal / days * (days - cancellationFee) + insurance), 
     });
