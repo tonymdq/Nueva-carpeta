@@ -98,9 +98,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       cancellationFee = 1
     }; 
     sendResponse({ 
-      result : Math.round(carPriceFinal + insurance),
-      totalCharge : Math.round(carPriceFinal / days * cancellationFee),
-      totalRefund : Math.round(carPriceFinal / days * (days - cancellationFee) + insurance), 
+      result : Math.round((carPriceFinal + insurance) * 100) /100,
+      totalCharge : Math.round((carPriceFinal / days * cancellationFee) *100) /100,
+      totalRefund : Math.round((carPriceFinal / days * (days - cancellationFee) + insurance) * 100) /100, 
     });
   }
 });
