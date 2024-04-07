@@ -1,7 +1,6 @@
 // popup.js
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Popup.js loaded.");
-  
+    
     const totalRefundElement = document.getElementById('totalRefund');
     const cancellationFeeElement = document.getElementById('cancellationFee');
     const totalPaidElement = document.getElementById('totalPaid');
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     if (extractButton) {
         extractButton.addEventListener("click", async function () {
-        console.log("Button clicked");
   
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
           const tab = tabs[0];
@@ -35,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
               const result = response.result; // Nested response, as variable received is named "response"
               const totalCharge = response.totalCharge;
               const totalRefund = response.totalRefund;
-              console.log("Received:", result, totalCharge, totalRefund);
               totalRefundElement.value = totalRefund;
               cancellationFeeElement.value = totalCharge;
               totalPaidElement.value = result;

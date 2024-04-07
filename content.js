@@ -1,6 +1,4 @@
-console.log("Content start");
 function extractData() {
-  console.log("comienzo funcion extractdata")
 
   function extractNumbersFromString(str) {
     return str.match(/\d+/g).map(Number);
@@ -18,7 +16,6 @@ function extractData() {
   const days = extractNumbersFromString(durationElement.textContent)[0];
   const insurance = extractNumbersFromString(insuranceElement.textContent)[0];
 
-  console.log(days, promotionDiscount, carHireCharge, insurance);// FOR TEST PURPOSE, CAN DELETE
   return [days, promotionDiscount, carHireCharge, insurance];
 }
 
@@ -26,8 +23,7 @@ function extractData() {
  // Call extractData when button pressed
 
  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log("Content Script Received Message:", request);
-
+  
   if (request.action === "extractData") {
     const [days, promotionDiscount, carHireCharge, insurance] = extractData();
     const carPriceFinal = carHireCharge - promotionDiscount
@@ -42,4 +38,3 @@ function extractData() {
     });
   }
 });
-console.log("Content end")
