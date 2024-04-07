@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { action: "extractData" },
             function (response) {
               console.log("Received response from content", response);
-              const result = response.result; // Nested response, as variable received is named "response"
+              const result = response.result;
               const totalCharge = response.totalCharge;
               const totalRefund = response.totalRefund;
               totalRefundElement.value = totalRefund;

@@ -1,10 +1,10 @@
 function extractData() {
 
   
-  days = getDays();
-  carHireCharge = getCarPrice();
-  promotionDiscount = getPromotion();
-  insurance = getInsurance();
+  const days = getDays();
+  const carHireCharge = getCarPrice();
+  const promotionDiscount = getPromotion();
+  const insurance = getInsurance();
   
   function getCarPrice(){
     const tdElements = document.querySelectorAll('td.main');
@@ -17,14 +17,15 @@ function extractData() {
           const nextTd = tdElements[index + 1];
           if (nextTd) {
               // Extract the number from the subsequent <td> element
-              const match = nextTd.textContent.trim().match(/[\d.]+/);
+              const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); //const match = nextTd.textContent.trim().match(/[\d.]+/);
               if (match) {
                   // Assign the extracted number to the carHireChargeNumber variable
-                  carHireChargeNumber = parseFloat(match[0]);
+                  carHireChargeNumber = parseFloat(match[0].replace(',', '.')); //carHireChargeNumber = parseFloat(match[0]);
               }
           }
       }
   });
+  console.log(carHireChargeNumber)
   return carHireChargeNumber
   }
   
@@ -38,51 +39,47 @@ function extractData() {
         const text = boldElement.textContent.trim();
         if (text.includes('day(s)')) {
             // Extract the number from the text using regular expression
-            days = parseInt(text.match(/\d+/)[0]);
+            days = parseInt(text.match(/[\d,]+\.\d+|[\d,]+/)[0]);
         }
     });
-    return days}
+    console.log(days)
+    return days
+  }
   
   
   function getPromotion() {
-    const tdElements = document.querySelectorAll('td.main');
-    let promotionDiscountNumber;
-    tdElements.forEach((td, index) => {
-      const text = td.textContent.trim();
-      // If the current <td> element contains the text "Promotion Discount:"
-      if (text.includes('Promotion Discount:')) {
-          // Check if the subsequent <td> element exists
-          const nextTd = tdElements[index + 2];
-          if (nextTd) {
-              // Extract the number from the subsequent <td> element
-              const match = nextTd.textContent.trim().match(/[\d.]+/);
-              if (match) {
-                  // Assign the extracted number to the promotionDiscountNumber variable
-                  promotionDiscountNumber = parseFloat(match[0]);
-              }
-          }
+    const tdElements = document.getElementById('PromotionDiscountAmountRow');
+    if (tdElements){
+      const selectAllTdMain = tdElements.querySelectorAll('td.main');
+      var textContent = selectAllTdMain[2].textContent
+      var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
+      var match = textContent.match(numberRegex);
+      var promotionDiscountNumber = parseFloat(match[0].replace(',', '.'));
+    }
+    else {
+        promotionDiscountNumber = 0;
       }
-  });
-  return promotionDiscountNumber
-  }
+    ;
+  console.log(promotionDiscountNumber)
+  return promotionDiscountNumber}
+  
 
-  function getInsurance() {
-    const tableRows = document.querySelectorAll('tr');
-    let targetNumber;
-    tableRows.forEach(row => {
-      // Check if the <tr> element contains the text "US$ 103.53"
-      const textContent = row.textContent.trim();
-      if (textContent.includes('US$ 103.53')) {
-          // Extract the number from the text using regular expression
-          const match = textContent.match(/[\d.]+/);
-          if (match) {
-              // Assign the extracted number to the targetNumber variable
-              targetNumber = parseFloat(match[0]);
-          }
-      }
-  });
-
-  return targetNumber
+  function getInsurance() {   
+    const locatePreviousid = document.getElementById("PrePaidExtrasHeaderRow")
+    if (locatePreviousid) {
+      // Get the next sibling element
+      let nextSibling = locatePreviousid.nextElementSibling; //Here we will get to class="         "
+      let insideTR = nextSibling.querySelectorAll('td.main')
+      var textContent = insideTR[1].textContent
+      var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
+      var match = textContent.match(numberRegex);
+      var insuranceNumber = parseFloat(match[0].replace(',', '.'));
+    }
+    else {
+      var insuranceNumber = 0;
+     }
+  console.log(insuranceNumber)
+  return insuranceNumber;
   }
 
   
@@ -90,20 +87,18 @@ function extractData() {
   return [days, promotionDiscount, carHireCharge, insurance];
 }
 
-
  // Call extractData when button pressed
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {  
   if (request.action === "extractData") {
     const [days, promotionDiscount, carHireCharge, insurance] = extractData();
-    console.log(days, promotionDiscount, carHireCharge, insurance);
     const carPriceFinal = carHireCharge - promotionDiscount;
     let cancellationFee = 3;
     if (days < 4) {
       cancellationFee = 1
     }; 
     sendResponse({ 
-      result : carPriceFinal + insurance,
+      result : MathMLElement.round(carPriceFinal + insurance),
       totalCharge : Math.round(carPriceFinal / days * cancellationFee),
       totalRefund : Math.round(carPriceFinal / days * (days - cancellationFee) + insurance), 
     });
