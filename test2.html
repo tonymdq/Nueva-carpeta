@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Script Test</title>
+</head>
+<body>
+    <!-- Sample HTML structure for testing -->
+    <div id="DurationRow">
+        <td colspan="2" align="right" bgcolor="#eeeeee" class="main"><b>Duration:</b></td>
+        <td class="main" width="10" bgcolor="#eeeeee">&nbsp;</td>
+        <td colspan="2" bgcolor="#eeeeee" class="main">
+            <b>8 day(s)</b>
+        </td>
+    </div>
+
+    <div class="">
+        <td colspan="2" align="right" class="main">
+            Car Hire Charge:
+        </td>
+        <td style="width: 10px;">&nbsp;</td>
+        <td colspan="2" class="main">
+            US$ 589.48 (USD) 
+        </td>
+    </div>
+
+    <div id="PromotionDiscountAmountRow">
+        <td colspan="2" style="background-color: #ffdc99" align="right" class="main">Promotion Discount:</td>
+        <td class="main" style="width: 10px; background-color: #ffdc99">&nbsp;</td>
+        <td colspan="2" style="background-color: #ffdc99" class="main">US$ 88.42 (USD)</td>
+    </div>
+
+    <div class="sub-total">
+        <td colspan="2" align="right" class="main">Total price of extras:</td>
+        <td style="width: 10px;">&nbsp;</td>
+        <td colspan="2" class="main">
+            US$ 103.53 (USD)
+        </td>
+    </div>
+
+    <!-- Load the content script -->
+    <script src="content.js"></script>
+</body>
+</html>
