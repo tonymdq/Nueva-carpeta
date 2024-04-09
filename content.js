@@ -20,7 +20,7 @@ function extractData() {
               const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); //const match = nextTd.textContent.trim().match(/[\d.]+/);
               if (match) {
                   // Assign the extracted number to the carHireChargeNumber variable
-                  carHireChargeNumber = parseFloat(match[0].replace(',', '.')); //carHireChargeNumber = parseFloat(match[0]);
+                  carHireChargeNumber = parseFloat(match[0].replace(",", "")); //carHireChargeNumber = parseFloat(match[0]);
               }
           }
       }
@@ -28,7 +28,7 @@ function extractData() {
   console.log(carHireChargeNumber)
   return carHireChargeNumber
   }
-  
+  // WHEN NUMBERS HAVE COMMAS AS LIKE CHILE AND JAPAN CURRENCY, FIX CALCULATION FOR COMMAS AND
   
   function getDays(){
     const durationRow = document.getElementById('DurationRow')
@@ -54,7 +54,7 @@ function extractData() {
       var textContent = selectAllTdMain[2].textContent
       var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
       var match = textContent.match(numberRegex);
-      var promotionDiscountNumber = parseFloat(match[0].replace(',', '.'));
+      var promotionDiscountNumber = parseFloat(match[0].replace(",", ""));
     }
     else {
         promotionDiscountNumber = 0;
@@ -73,7 +73,7 @@ function extractData() {
       var textContent = insideTR[1].textContent
       var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
       var match = textContent.match(numberRegex);
-      var insuranceNumber = parseFloat(match[0].replace(',', '.'));
+      var insuranceNumber = parseFloat(match[0].replace(",", ""));
     }
     else {
       var insuranceNumber = 0;
