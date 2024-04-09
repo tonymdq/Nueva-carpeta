@@ -17,10 +17,10 @@ function extractData() {
           const nextTd = tdElements[index + 1];
           if (nextTd) {
               // Extract the number from the subsequent <td> element
-              const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); //const match = nextTd.textContent.trim().match(/[\d.]+/);
+              const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); 
               if (match) {
                   // Assign the extracted number to the carHireChargeNumber variable
-                  carHireChargeNumber = parseFloat(match[0].replace(",", "")); //carHireChargeNumber = parseFloat(match[0]);
+                  carHireChargeNumber = parseFloat(match[0].replace(",", "")); 
               }
           }
       }
@@ -28,7 +28,6 @@ function extractData() {
   console.log(carHireChargeNumber)
   return carHireChargeNumber
   }
-  // WHEN NUMBERS HAVE COMMAS AS LIKE CHILE AND JAPAN CURRENCY, FIX CALCULATION FOR COMMAS AND
   
   function getDays(){
     const durationRow = document.getElementById('DurationRow')
