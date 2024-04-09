@@ -33,9 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
               const result = response.result;
               const totalCharge = response.totalCharge;
               const totalRefund = response.totalRefund;
-              totalRefundElement.value = totalRefund;
-              cancellationFeeElement.value = totalCharge;
-              totalPaidElement.value = result;
+              const currencyCode = response.currencyCode;
+              totalRefundElement.value = totalRefund + " " + currencyCode;
+              cancellationFeeElement.value = totalCharge + " " + currencyCode;
+              totalPaidElement.value = result + " " + currencyCode;
             }
           );
         });

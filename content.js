@@ -2,13 +2,14 @@ function extractData() {
 
   
   const days = getDays();
-  const carHireCharge = getCarPrice();
+  const [carHireCharge, currencyCode] = getCarPrice();
   const promotionDiscount = getPromotion();
   const insurance = getInsurance();
   
   function getCarPrice(){
     const tdElements = document.querySelectorAll('td.main');
     let carHireChargeNumber;
+    let currencyCode;
     tdElements.forEach((td, index) => {
       const text = td.textContent.trim();
       // If the current <td> element contains the text "Car Hire Charge:"
@@ -20,13 +21,16 @@ function extractData() {
               const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); 
               if (match) {
                   // Assign the extracted number to the carHireChargeNumber variable
-                  carHireChargeNumber = parseFloat(match[0].replace(",", "")); 
+                  carHireChargeNumber = parseFloat(match[0].replace(",", ""));
+                  let stringWithCurrency = (match.input)
+                  let regex = /\b[A-Z]{3}\b/g;
+                  currencyCode = stringWithCurrency.match(regex) 
               }
           }
       }
   });
-  console.log(carHireChargeNumber)
-  return carHireChargeNumber
+  console.log(carHireChargeNumber, currencyCode)
+  return [carHireChargeNumber, currencyCode]
   }
   
   function getDays(){
@@ -83,14 +87,14 @@ function extractData() {
 
   
 
-  return [days, promotionDiscount, carHireCharge, insurance];
+  return [days, promotionDiscount, carHireCharge, insurance, currencyCode];
 }
 
  // Call extractData when button pressed
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {  
   if (request.action === "extractData") {
-    const [days, promotionDiscount, carHireCharge, insurance] = extractData();
+    const [days, promotionDiscount, carHireCharge, insurance, currencyCode] = extractData();
     const carPriceFinal = carHireCharge - promotionDiscount;
     let cancellationFee = 3;
     if (days < 4) {
@@ -99,7 +103,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     sendResponse({ 
       result : Math.round((carPriceFinal + insurance) * 100) /100,
       totalCharge : Math.round((carPriceFinal / days * cancellationFee) *100) /100,
-      totalRefund : Math.round((carPriceFinal / days * (days - cancellationFee) + insurance) * 100) /100, 
+      totalRefund : Math.round((carPriceFinal / days * (days - cancellationFee) + insurance) * 100) /100,
+      currencyCode: currencyCode,
     });
   }
 });
