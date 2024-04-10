@@ -17,21 +17,23 @@ function extractData() {
           // Check if the subsequent <td> element exists
           const nextTd = tdElements[index + 1];
           if (nextTd) {
-              // Extract the number from the subsequent <td> element
-              const match = nextTd.textContent.trim().match(/[\d,]+\.\d+|[\d,]+/); 
+              // Extract the number from the subsequent <td> element //
+              const match = nextTd.textContent.trim().match(/(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/); // /[\d,]+\.\d+|[\d,]+/              
               if (match) {
-                  // Assign the extracted number to the carHireChargeNumber variable
-                  carHireChargeNumber = parseFloat(match[0].replace(",", ""));
-                  let stringWithCurrency = (match.input)
+                if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+                  match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
+                }};
+                  // Assign the extracted number to the carHireChargeNumber variabl
+                  carHireChargeNumber = parseFloat(match[0]);
+                  let stringWithCurrency = (match.input);
                   let regex = /\b[A-Z]{3}\b/g;
-                  currencyCode = stringWithCurrency.match(regex) 
-              }
+                  currencyCode = stringWithCurrency.match(regex);
           }
       }
-  });
+    })
   console.log(carHireChargeNumber, currencyCode)
   return [carHireChargeNumber, currencyCode]
-  }
+    }  
   
   function getDays(){
     const durationRow = document.getElementById('DurationRow')
@@ -42,7 +44,7 @@ function extractData() {
         const text = boldElement.textContent.trim();
         if (text.includes('day(s)')) {
             // Extract the number from the text using regular expression
-            days = parseInt(text.match(/[\d,]+\.\d+|[\d,]+/)[0]);
+            days = parseInt(text.match(/\d+/)[0]);
         }
     });
     console.log(days)
@@ -55,12 +57,15 @@ function extractData() {
     if (tdElements){
       const selectAllTdMain = tdElements.querySelectorAll('td.main');
       var textContent = selectAllTdMain[2].textContent
-      var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
+      var numberRegex = /(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
       var match = textContent.match(numberRegex);
+      if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+        match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
+      }
       var promotionDiscountNumber = parseFloat(match[0].replace(",", ""));
     }
     else {
-        promotionDiscountNumber = 0;
+        var promotionDiscountNumber = 0;
       }
     ;
   console.log(promotionDiscountNumber)
@@ -74,8 +79,13 @@ function extractData() {
       let nextSibling = locatePreviousid.nextElementSibling; //Here we will get to class="         "
       let insideTR = nextSibling.querySelectorAll('td.main')
       var textContent = insideTR[1].textContent
-      var numberRegex = /(\d{1,3}[,.]\d{1,3}(\.\d{1,2})?|\d+)/;
+      var numberRegex = /(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
       var match = textContent.match(numberRegex);
+      if (match) {
+        if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+          match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
+        }
+      }
       var insuranceNumber = parseFloat(match[0].replace(",", ""));
     }
     else {
