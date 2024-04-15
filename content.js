@@ -18,16 +18,18 @@ function extractData() {
           const nextTd = tdElements[index + 1];
           if (nextTd) {
               // Extract the number from the subsequent <td> element //
-              const match = nextTd.textContent.trim().match(/(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/); // /[\d,]+\.\d+|[\d,]+/              
-              if (match) {
-                if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
-                  match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
-                }};
+              console.log(nextTd)
+              const match = nextTd.textContent.trim().match(/(\d{1,3}(?:([.,]\d{3})+|\d*)(?:[.,]\d{2})?)/);              // /(\d{1,}(?:[,.]?\d{,3})*(?:[.,]\d{2})?)/
+              console.log(match[0])
+/*               if (match) {
+                if (/\d{1,10},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+                  match[0] = match[0].replace(/(\d{1,10}),(\d{2})\b/, "$1.$2"); // match[0].replace(/(\d{1,10}),(\d{2})\b/, "$1.$2");
+                }}; */
                   // Assign the extracted number to the carHireChargeNumber variabl
-                  carHireChargeNumber = parseFloat(match[0]);
-                  let stringWithCurrency = (match.input);
-                  let regex = /\b[A-Z]{3}\b/g;
-                  currencyCode = stringWithCurrency.match(regex);
+              carHireChargeNumber = parseFloat(match[0].replace(/[,\.](?=\d{2}$)/g, ".")); 
+              let stringWithCurrency = (match.input);
+              let regex = /\b[A-Z]{3}\b/g;
+              currencyCode = stringWithCurrency.match(regex);
           }
       }
     })
@@ -57,10 +59,10 @@ function extractData() {
     if (tdElements){
       const selectAllTdMain = tdElements.querySelectorAll('td.main');
       var textContent = selectAllTdMain[2].textContent
-      var numberRegex = /(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
+      var numberRegex = /(\d{1,10}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
       var match = textContent.match(numberRegex);
-      if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
-        match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
+      if (/\d{1,10},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+        match[0] = match[0].replace(/(\d{1,10}),(\d{2})\b/, "$1.$2");
       }
       var promotionDiscountNumber = parseFloat(match[0].replace(",", ""));
     }
@@ -79,11 +81,11 @@ function extractData() {
       let nextSibling = locatePreviousid.nextElementSibling; //Here we will get to class="         "
       let insideTR = nextSibling.querySelectorAll('td.main')
       var textContent = insideTR[1].textContent
-      var numberRegex = /(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
+      var numberRegex = /(\d{1,10}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/;
       var match = textContent.match(numberRegex);
       if (match) {
-        if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
-          match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
+        if (/\d{1,10},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+          match[0] = match[0].replace(/(\d{1,10}),(\d{2})\b/, "$1.$2");
         }
       }
       var insuranceNumber = parseFloat(match[0].replace(",", ""));
