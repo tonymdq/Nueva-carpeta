@@ -32,15 +32,12 @@ function extractData() {
           const nextTd = tdElements[index + 1];
           if (nextTd) {
               // Extract the number from the subsequent <td> element //
-              const match = nextTd.textContent.trim().match(/(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/); // /[\d,]+\.\d+|[\d,]+/              
+              const match = nextTd.textContent.trim().match(/(\d{1,10}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/);             
               if (match) {
                 match[0] = standarizeNumber(match[0])
- /*                if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
-                  match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2"); 
-                } */
               };
-                  // Assign the extracted number to the carHireChargeNumber variabl
-              carHireChargeNumber = parseFloat(match[0].replace(/[,\.](?=\d{2}$)/g, ".")); 
+              // Assign the extracted number to the carHireChargeNumber variable
+              carHireChargeNumber = match[0];  
               let stringWithCurrency = (match.input);
               let regex = /\b[A-Z]{3}\b/g;
               currencyCode = stringWithCurrency.match(regex);
@@ -49,7 +46,7 @@ function extractData() {
     })
   console.log(carHireChargeNumber, currencyCode)
   return [carHireChargeNumber, currencyCode]
-    }  
+  }  
   
   function getDays(){
     const durationRow = document.getElementById('DurationRow')
