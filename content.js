@@ -6,6 +6,20 @@ function extractData() {
   const promotionDiscount = getPromotion();
   const insurance = getInsurance();
   
+  
+  function standarizeNumber(strg) {
+      var strg = strg || "";
+      var decimal = '.';
+      strg = strg.replace(/[^0-9$.,]/g, '');
+      if(strg.indexOf(',') > strg.indexOf('.')) decimal = ',';
+      if((strg.match(new RegExp("\\" + decimal,"g")) || []).length > 1) decimal="";
+      if (decimal !== "" && (strg.length - strg.indexOf(decimal) - 1 == 3) && strg.indexOf("0" + decimal)!==0) decimal = "";
+      strg = strg.replace(new RegExp("[^0-9$" + decimal + "]","g"), "");
+      strg = strg.replace(',', '.');
+      return parseFloat(strg);
+  }   
+
+  
   function getCarPrice(){
     const tdElements = document.querySelectorAll('td.main');
     let carHireChargeNumber;
@@ -20,9 +34,11 @@ function extractData() {
               // Extract the number from the subsequent <td> element //
               const match = nextTd.textContent.trim().match(/(\d{1,3}(?:[,.]?\d{3})*(?:[.,]\d{2})?)/); // /[\d,]+\.\d+|[\d,]+/              
               if (match) {
-                if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
-                  match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2");
-                }};
+                match[0] = standarizeNumber(match[0])
+ /*                if (/\d{1,3},\d{2}\b/.test(match[0])) { // Replace "," for "." if found before 2 last digits
+                  match[0] = match[0].replace(/(\d{1,3}),(\d{2})\b/, "$1.$2"); 
+                } */
+              };
                   // Assign the extracted number to the carHireChargeNumber variabl
                   carHireChargeNumber = parseFloat(match[0]);
                   let stringWithCurrency = (match.input);
